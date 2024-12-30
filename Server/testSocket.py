@@ -9,7 +9,7 @@ def start_server():
     while True:
         try:
             client_socket, client_address = server_socket.accept()
-            print(f"Connection from {client_address}")
+
             data = client_socket.recv(1024).decode()
             print(f"Received: {data}")
             client_socket.send("Data received".encode())
