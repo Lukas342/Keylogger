@@ -11,7 +11,11 @@ def start_server():
             client_socket, client_address = server_socket.accept()
 
             data = client_socket.recv(1024).decode()
-            print(f"Received: {data}")
+            print(f"{data}")
+            
+            with open("received.txt", "a") as file:
+                file.write(data + "\n")
+                
             client_socket.send("Data received".encode())
         except ConnectionAbortedError as e:
             print(f"Connection aborted: {e}")
